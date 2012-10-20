@@ -11,7 +11,17 @@
    Syntax recommendation http://www.w3.org/TR/REC-CSS2/
 */
 
-root { 
-    display: block;
+table { 
+    border: 1px solid #000000;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    margin: 5px;
+}
+td{
+    padding: 5px;
+}
+section{
+    margin: 0 auto;
 }
 

@@ -34,11 +34,16 @@ class Controller_Workers extends Controller {
                 //validation
                 if($worker->imie=='') $msg='Imię nie może być puste!<br />';
                 if($worker->nazwisko=='') $msg=$msg.'Imię nie może być puste!<br />';
-                if(11!==strlen($worker->pesel)) $msg=$msg.'Pesel jest za krótki!<br />';
+                if($worker->stanowisko=='') $msg=$msg.'Stanowisko nie może być puste!<br />';
+                if(11!==strlen($worker->pesel)) $msg=$msg.'Pesel ma złą długość!<br />';
+                //check if pesel exist
+                $checkpesel = ORM::factory('workers')->where('pesel','=',$worker->pesel)->find();
+                if($checkpesel->idworkerses!=$worker->idworkerses and $checkpesel->idworkerses!=NULL)$msg=$msg.'Taki pesel już istnieje!<br />';
                 
+                //check msg - if is empty then update
                 if($msg==''){
                     $msg = 'Dane zostały zaktualizowane!';
-                    $orm = ORM::factory('workers')->find($worker->idworkerses);
+                    $orm = ORM::factory('workers')->where('idworkerses','=',$worker->idworkerses)->find();
                     $orm->imie=$worker->imie;
                     $orm->nazwisko=$worker->nazwisko;
                     $orm->pesel=$worker->pesel;
@@ -66,13 +71,17 @@ class Controller_Workers extends Controller {
                 $worker->stanowisko=$_POST['stanowisko'];
                 $worker->pesel=$_POST['pesel'];
                 $worker->idworkerses=$_POST['idworkerses'];
+                
                 //validation
                 if($worker->imie=='') $msg='Imię nie może być puste!<br />';
                 if($worker->nazwisko=='') $msg=$msg.'Imię nie może być puste!<br />';
-                if(11!==strlen($worker->pesel)) $msg=$msg.'Pesel jest za krótki!<br />';
+                if($worker->stanowisko=='') $msg=$msg.'Stanowisko nie może być puste!<br />';
+                if(11!==strlen($worker->pesel)) $msg=$msg.'Pesel ma złą długość!<br />';
                 //check if pesel exist
                 $checkpesel = ORM::factory('workers')->where('pesel','=',$worker->pesel)->count_all();
                 if($checkpesel!=0)$msg=$msg.'Taki pesel już istnieje!<br />';
+                
+                //check msg - if is empty then add
                 if($msg==''){
                     $msg = 'Pracownik został dodany!';
                     $orm = ORM::factory('workers');
@@ -87,6 +96,16 @@ class Controller_Workers extends Controller {
             $view->msg=$msg;
             $view->worker=$worker;
             $this->response->body($view);
+        }
+        public function action_delete(){
+            $view = new View('workers/delete');
+            $view->header='Usuń';
+            if($this->request->param('id')!=''){
+                $orm = ORM::factory('workers')->where('idworkerses','=',$this->request->param('id'))->find();
+                $view->msg='Usunięto pracownika: '.$orm->imie.' '.$orm->nazwisko.' o numerze pesel - '.$orm->pesel.'!';
+                $orm->delete();
+                $this->response->body($view);
+            }else $this->request->redirect();
         }
 
 } // End Welcome

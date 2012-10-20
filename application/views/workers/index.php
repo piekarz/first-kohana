@@ -20,12 +20,12 @@
                     <td><?php echo $worker->nazwisko; ?></td>
                     <td><?php echo $worker->stanowisko; ?></td>
                     <td><?php echo $worker->pesel; ?></td>
-                    <td><?php echo HTML::anchor("workers/edit/".$worker->idworkerses, "Edytuj"); ?></td>
+                    <td><?php echo HTML::anchor("workers/edit/".$worker->idworkerses, "Edytuj").' '.HTML::anchor("workers/delete/".$worker->idworkerses, "Usuń"); ?></td>
                 </tr>
 
             <?php endforeach;?>
             </table>
-            <?php }else echo"Brak pracowników w bazie danych!";?>
+            <?php }else echo"<br />Brak pracowników w bazie danych!";?>
         </section>
     </body>
 </html>
